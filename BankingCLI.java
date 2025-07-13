@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 class BankAccount implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -239,6 +238,17 @@ public class BankingCLI {
         showMainMenu();
     }
 
+    private static String getHiddenInput(String prompt) {
+        Console console = System.console();
+        if (console != null) {
+            char[] passwordChars = console.readPassword(prompt);
+            return new String(passwordChars);
+        }
+        // Fallback for IDEs that don't provide a console
+        System.out.print(prompt);
+        return scanner.nextLine();
+    }
+
     private static void showMainMenu() {
         while (true) {
             System.out.println("\n===== Banking Information System =====");
@@ -278,7 +288,7 @@ public class BankingCLI {
         double initialDeposit = getDoubleInput(0, Double.MAX_VALUE);
 
         System.out.print("Set your password: ");
-        String password = scanner.nextLine();
+        String password = getHiddenInput("");
 
         bankSystem.registerAccount(name, address, phone, initialDeposit, password);
     }
@@ -289,7 +299,7 @@ public class BankingCLI {
         String accountNumber = scanner.nextLine();
 
         System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        String password = getHiddenInput("");
 
         currentAccount = bankSystem.login(accountNumber, password);
 
@@ -380,12 +390,13 @@ public class BankingCLI {
 
     private static void changePassword() {
         System.out.println("\n===== Change Password =====");
+
         System.out.print("Enter current password: ");
-        String currentPassword = scanner.nextLine();
+        String currentPassword = getHiddenInput("");
 
         if (currentAccount.verifyPassword(currentPassword)) {
             System.out.print("Enter new password: ");
-            String newPassword = scanner.nextLine();
+            String newPassword = getHiddenInput("");
             currentAccount.changePassword(newPassword);
             bankSystem.saveData();
             System.out.println("Password changed successfully!");
