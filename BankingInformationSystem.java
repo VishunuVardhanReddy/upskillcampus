@@ -229,7 +229,7 @@ class BankSystem {
     }
 }
 
-public class BankingCLI {
+public class BankingInformationSystem {
     private static Scanner scanner = new Scanner(System.in);
     private static BankSystem bankSystem = new BankSystem();
     private static BankAccount currentAccount = null;
